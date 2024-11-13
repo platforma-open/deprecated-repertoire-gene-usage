@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.workflow
 
+## 1.0.2
+
+### Patch Changes
+
+- 29d4e9e: publish
+
 ## 1.0.1
 
 ### Patch Changes
