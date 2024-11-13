@@ -1,0 +1,153 @@
+
+ll := import("@platforma-sdk/workflow-tengo:ll")
+self := import("@platforma-sdk/workflow-tengo:tpl")
+exec := import("@platforma-sdk/workflow-tengo:exec")
+assets := import("@platforma-sdk/workflow-tengo:assets")
+pframes := import("@platforma-sdk/workflow-tengo:pframes")
+pColumn := import("@platforma-sdk/workflow-tengo:pframes.pcolumn")
+xsv := import("@platforma-sdk/workflow-tengo:pframes.xsv")
+text := import("text")
+json := import("json")
+
+self.defineOutputs("vUsage", "jUsage", "vFamilyUsage", "jFamilyUsage", "isotypeUsage")
+
+tsvImportParams := func(usageType){
+
+	// gene/isotype axis spec
+	axisSpec:= undefined
+	// column spec
+	columnSpec:= undefined
+
+	if (usageType == "isotypeUsage") {
+		axisSpec = {
+			name: "pl7.app/vdj/isotype",
+			type: "String",
+			annotations: {
+				"pl7.app/label": "Isotype",
+				"pl7.app/axisNature": "heterogeneous"
+			}
+		}
+
+		columnSpec = {
+			name: "pl7.app/vdj/isotypeUsage",
+			valueType: "Float",
+			annotations: {
+				"pl7.app/label": "Isotype usage"
+			}
+		}
+	} else {
+		geneType := text.to_upper(usageType[0:1]) // first letter is either v or j
+		geneNameFormat := "gene"
+		if text.contains(usageType, "Family") {
+			geneNameFormat = "family"
+		}
+
+		axisSpec = {
+			name: "pl7.app/vdj/gene",
+			type: "String",
+			domain: {
+				"pl7.app/vdj/geneType": geneType,
+				"pl7.app/vdj/geneNameForma": geneNameFormat
+			},
+			annotations: {
+				"pl7.app/label": geneType + " " + geneNameFormat,
+				"pl7.app/axisNature": "heterogeneous"
+			}
+		}
+
+		columnSpec =  {
+			name: "pl7.app/vdj/geneUsage",
+			valueType: "Float",
+			domain: {
+				"pl7.app/vdj/geneType": geneType,
+				"pl7.app/vdj/geneNameFormat": geneNameFormat
+			},
+			annotations: {
+				"pl7.app/label": geneType + " " + geneNameFormat + " usage"
+			}
+		}
+	}
+
+	return {
+		"axes": [
+			{
+				column: "sample",
+				preProcess: [{
+					type: "regexpReplace",
+					pattern: "^(.*)\\.clns$",
+					replacement: "$1"
+				}]
+				/* spec: sampleId spec must be set outside */
+			},
+			{
+				column: "metric",
+				spec: axisSpec
+			}
+			],
+		columns: [
+			{
+				column: "value",
+				id: "value",
+				allowNA: true,
+				spec: columnSpec
+			}
+			],
+		storageFormat: "Binary",
+		partitionKeyLength: 0
+	}
+}
+
+
+FILE_NAME_PREFIX_LEN := {
+	"vUsage" : len("r.vUsage."),
+	"jUsage" : len("r.jUsage."),
+	"vFamilyUsage" : len("r.vFamilyUsage."),
+	"jFamilyUsage" : len("r.jFamilyUsage."),
+	"isotypeUsage" : len("r.IsotypeUsage.")
+}
+FILE_NAME_SUFFIX_LEN := len(".tsv")
+
+
+importUsage := func(tsv, usageType, sampleIdAxisSpec) {
+
+	tsvMap := pColumn.resourceMapBuilder(/* key length*/ 1 )
+	for fileName, file in tsv {
+		chain := fileName[FILE_NAME_PREFIX_LEN[usageType]:(len(fileName) - FILE_NAME_SUFFIX_LEN)]
+		tsvMap.add([chain], file)
+	}
+	tsvMap = tsvMap.build()
+
+	spec := tsvImportParams(usageType)
+	spec.axes[0].spec = sampleIdAxisSpec
+
+	pf := xsv.importFileMap(tsvMap, "tsv", spec, {
+		additionalAxesSpec: [
+			{
+				"name": "pl7.app/vdj/chain",
+				"type": "String",
+				"annotations": {
+					"pl7.app/label": "Chain",
+					"pl7.app/axisNature": "scaleCompatible"
+				}
+			}
+			],
+		transpose: {
+			pAxisIdx: 0,
+			pAxisNameOverride: "sample",
+			sAxisName: "metric",
+			valueName: "value"
+		}
+	})
+
+	return pf
+}
+
+self.body(func(args) {
+	return {
+		vUsage: importUsage(args.vUsageTsv, "vUsage", args.sampleIdAxisSpec),
+		jUsage: importUsage(args.jUsageTsv, "jUsage", args.sampleIdAxisSpec),
+		vFamilyUsage: importUsage(args.vFamilyUsageTsv, "vFamilyUsage", args.sampleIdAxisSpec),
+		jFamilyUsage: importUsage(args.jFamilyUsageTsv, "jFamilyUsage", args.sampleIdAxisSpec),
+		isotypeUsage: importUsage(args.isotypeUsageTsv, "isotypeUsage", args.sampleIdAxisSpec)
+	}
+})
