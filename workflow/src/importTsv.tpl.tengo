@@ -23,8 +23,7 @@ tsvImportParams := func(usageType){
 			name: "pl7.app/vdj/isotype",
 			type: "String",
 			annotations: {
-				"pl7.app/label": "Isotype",
-				"pl7.app/axisNature": "heterogeneous"
+				"pl7.app/label": "Isotype"
 			}
 		}
 
@@ -50,8 +49,7 @@ tsvImportParams := func(usageType){
 				"pl7.app/vdj/geneNameForma": geneNameFormat
 			},
 			annotations: {
-				"pl7.app/label": geneType + " " + geneNameFormat,
-				"pl7.app/axisNature": "heterogeneous"
+				"pl7.app/label": geneType + " " + geneNameFormat
 			}
 		}
 

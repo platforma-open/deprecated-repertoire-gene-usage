@@ -80,6 +80,13 @@ export const model = BlockModel.create<BlockArgs, UiState>()
       return undefined;
     }
 
+    // for the table purposes, we set "pl7.app/axisNature": "heterogeneous" on gene axis
+    if (pCols.length === 1) {
+      pCols[0].spec.axesSpec[2].annotations!['pl7.app/axisNature'] = 'heterogeneous';
+    } else {
+      console.log('unexpected number of columns');
+    }
+
     return createPlDataTable(ctx, pCols, ctx.uiState?.tableState);
   })
 
