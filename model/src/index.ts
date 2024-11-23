@@ -5,6 +5,7 @@ import {
   InferOutputsType,
   isPColumn,
   isPColumnSpec,
+  PColumnSpec,
   PlDataTableState,
   Ref,
   ValueType
@@ -55,12 +56,35 @@ const getOutputName = (args: BlockArgs) => {
   }
 };
 
-export const model = BlockModel.create<BlockArgs, UiState>()
-  .initialArgs({
+export const model = BlockModel.create()
+  .withArgs<BlockArgs>({
     geneType: 'v',
     geneNameFormat: 'gene',
     onlyProductive: true,
     dropOutliers: false
+  })
+  .withUiState<UiState>({
+    weight: 'auto',
+    tableState: {
+      gridState: {},
+      pTableParams: {
+        sorting: [],
+        filters: []
+      }
+    },
+    downsampling: {
+      type: 'auto',
+      tag: 'read',
+      countNorm: 'auto',
+      countNormValue: 1000,
+      topValue: 1000,
+      cumtopValue: 80
+    },
+    graphState: {
+      title: 'Gene usage',
+      chartType: 'heatmap',
+      template: 'heatmap'
+    }
   })
 
   .argsValid((ctx) => ctx.args.downsampling !== undefined && ctx.args.weight !== undefined)
@@ -70,7 +94,7 @@ export const model = BlockModel.create<BlockArgs, UiState>()
   )
 
   .output('datasetSpec', (ctx) => {
-    if (ctx.args.clnsRef) return ctx.resultPool.getSpecByRef(ctx.args.clnsRef);
+    if (ctx.args.clnsRef) return ctx.resultPool.getSpecByRef(ctx.args.clnsRef) as PColumnSpec;
     else return undefined;
   })
 
@@ -109,7 +133,7 @@ export const model = BlockModel.create<BlockArgs, UiState>()
 
   .sections([
     { type: 'link', href: '/', label: 'Tabular results' },
-    { type: 'link', href: '/graph', label: 'Heatmap' }
+    { type: 'link', href: '/graph', label: 'Usage heatmap' }
   ])
 
   .done();

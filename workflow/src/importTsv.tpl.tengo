@@ -46,7 +46,7 @@ tsvImportParams := func(usageType){
 			type: "String",
 			domain: {
 				"pl7.app/vdj/geneType": geneType,
-				"pl7.app/vdj/geneNameForma": geneNameFormat
+				"pl7.app/vdj/geneNameFormat": geneNameFormat
 			},
 			annotations: {
 				"pl7.app/label": geneType + " " + geneNameFormat
