@@ -27,11 +27,16 @@
       "url": "https://github.com/platforma-open/repertoire-gene-usage",
       "docs": "https://github.com/platforma-open/repertoire-gene-usage/docs",
       "support": "mailto:support@milaboratories.com",
-      "description": "V/J gene usage analysis.",
+      "description": "Calculate TCR/BCR V and J gene usage.",
       "longDescription": "file:./docs/description.md",
       "changelog": "file:CHANGELOG.md",
       "tags": [
-        "tutorial"
+        "VDJ",
+        "immunology",
+        "repertoire",
+        "GeneUsage",
+        "TCR",
+        "BCR"
       ],
       "organization": {
         "name": "MiLaboratories Inc",
