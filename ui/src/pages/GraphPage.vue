@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GraphMaker, GraphMakerSettings } from "@milaboratories/graph-maker";
+import { GraphMaker, GraphMakerProps } from "@milaboratories/graph-maker";
 import '@milaboratories/graph-maker/styles';
 import {
     AxisSpec,
@@ -48,7 +48,11 @@ const defaultOptions = computed(() => {
         value = {
             kind: 'PColumn',
             valueType: 'Float',
-            name: `pl7.app/vdj/${gt}Usage`,
+            name: 'pl7.app/vdj/geneUsage',
+            domain: {
+                "pl7.app/vdj/geneType": app.model.args.geneType,
+                "pl7.app/vdj/geneNameFormat": app.model.args.geneNameFormat
+            },
             axesSpec: [
                 ds.axesSpec[0],
                 genes
@@ -67,16 +71,19 @@ const defaultOptions = computed(() => {
         {
             inputName: 'Y',
             selectedSource: genes
+        },
+        {
+            inputName: 'tabBy',
+            selectedSource: {
+                name: 'pl7.app/vdj/chain',
+                type: 'String'
+            }
         }
-    ]
-})
-
-const graphMakerSettings = computed<GraphMakerSettings>({
-    get: () => ({ ...app.model.ui.graphState, defaultOptions: defaultOptions.value }),
-    set: (val) => app.model.ui.graphState = val
+    ] as GraphMakerProps['defaultOptions']
 })
 </script>
 
 <template>
-    <GraphMaker :p-frame="app.model.outputs.pf" v-model="graphMakerSettings" />
+    <GraphMaker chart-type="heatmap" :p-frame="app.model.outputs.pf" v-model="app.model.ui.graphState"
+        :default-options="defaultOptions" />
 </template>
