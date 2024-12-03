@@ -1,7 +1,9 @@
-import { GraphMakerSettings } from '@milaboratories/graph-maker';
+import { GraphMakerState } from '@milaboratories/graph-maker';
 import {
   BlockModel,
   createPlDataTable,
+  createPlDataTableSheet,
+  getUniquePartitionKeys,
   InferOutputsType,
   isPColumn,
   isPColumnSpec,
@@ -26,8 +28,9 @@ type DownsamplingForm = {
  * UI state
  */
 export type UiState = {
+  blockTitle: string;
   tableState?: PlDataTableState;
-  graphState: GraphMakerSettings;
+  graphState: GraphMakerState;
   weight: WeightFunction;
   downsampling: DownsamplingForm;
 };
@@ -64,6 +67,7 @@ export const model = BlockModel.create()
     dropOutliers: false
   })
   .withUiState<UiState>({
+    blockTitle: 'V/J Gene Usage',
     weight: 'auto',
     tableState: {
       gridState: {},
@@ -81,8 +85,7 @@ export const model = BlockModel.create()
       cumtopValue: 80
     },
     graphState: {
-      title: 'Gene usage',
-      chartType: 'heatmap',
+      title: 'Gene Usage',
       template: 'heatmap'
     }
   })
@@ -104,6 +107,12 @@ export const model = BlockModel.create()
       return undefined;
     }
 
+    const anchor = pCols[0];
+    if (!anchor) return undefined;
+
+    const r = getUniquePartitionKeys(anchor.data);
+    if (!r) return undefined;
+
     // for the table purposes, we set "pl7.app/axisNature": "heterogeneous" on gene axis
     if (pCols.length === 1) {
       pCols[0].spec.axesSpec[2].annotations!['pl7.app/axisNature'] = 'heterogeneous';
@@ -111,7 +120,10 @@ export const model = BlockModel.create()
       console.log('unexpected number of columns');
     }
 
-    return createPlDataTable(ctx, pCols, ctx.uiState?.tableState);
+    return {
+      table: createPlDataTable(ctx, pCols, ctx.uiState?.tableState),
+      sheets: r.map((values, i) => createPlDataTableSheet(ctx, anchor.spec.axesSpec[i], values))
+    };
   })
 
   .output('pf', (ctx) => {
@@ -131,9 +143,13 @@ export const model = BlockModel.create()
     return ctx.createPFrame([...pCols, ...upstream]);
   })
 
+  .output('isRunning', (ctx) => ctx.outputs?.getIsReadyOrError() === false)
+
+  .title((ctx) => ctx.uiState?.blockTitle ?? 'Repertoire Diversity')
+
   .sections([
-    { type: 'link', href: '/', label: 'Tabular results' },
-    { type: 'link', href: '/graph', label: 'Usage heatmap' }
+    { type: 'link', href: '/', label: 'Tabular Results' },
+    { type: 'link', href: '/graph', label: 'Usage Heatmap' }
   ])
 
   .done();
