@@ -10,7 +10,9 @@ import { useApp } from "../app";
 
 const app = useApp();
 
-const defaultOptions = computed(() => {
+console.log('loaded');
+
+const defaultOptions = computed((): GraphMakerProps['defaultOptions'] => {
     const ds = app.model.outputs.datasetSpec
     if (!ds) {
         return undefined
@@ -59,27 +61,31 @@ const defaultOptions = computed(() => {
             ]
         }
     }
-    return [
+    const defaults: GraphMakerProps['defaultOptions'] = [
         {
             inputName: 'value',
             selectedSource: value
         },
         {
-            inputName: 'X',
+            inputName: 'x',
             selectedSource: ds.axesSpec[0]
         },
         {
-            inputName: 'Y',
+            inputName: 'y',
             selectedSource: genes
-        },
-        {
-            inputName: 'tabBy',
-            selectedSource: {
-                name: 'pl7.app/vdj/chain',
-                type: 'String'
-            }
         }
-    ] as GraphMakerProps['defaultOptions']
+        // {
+        //     inputName: 'tabBy',
+        //     selectedSource: {
+        //         name: 'pl7.app/vdj/chain',
+        //         type: 'String'
+        //     }
+        // }
+    ];
+
+    console.log(defaults);
+
+    return defaults;
 })
 </script>
 

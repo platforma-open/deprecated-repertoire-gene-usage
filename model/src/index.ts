@@ -117,7 +117,7 @@ export const model = BlockModel.create()
     if (pCols.length === 1) {
       pCols[0].spec.axesSpec[2].annotations!['pl7.app/axisNature'] = 'heterogeneous';
     } else {
-      console.log('unexpected number of columns');
+      throw Error('unexpected number of columns');
     }
 
     return {
