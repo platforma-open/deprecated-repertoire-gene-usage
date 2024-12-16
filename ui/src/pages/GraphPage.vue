@@ -26,9 +26,12 @@ const defaultOptions = computed((): GraphMakerProps['defaultOptions'] => {
         {
             inputName: 'y',
             selectedSource: col.axesSpec[2]
+        },
+        {
+            inputName: 'filters',
+            selectedSource: col.axesSpec[0]
         }
     ];
-
 
     return defaults;
 })
