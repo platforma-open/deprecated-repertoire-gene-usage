@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { GraphMaker, GraphMakerProps } from "@milaboratories/graph-maker";
 import '@milaboratories/graph-maker/styles';
-import {
-    AxisSpec,
-    PColumnSpec
-} from '@platforma-sdk/model';
 import { computed } from "vue";
 import { useApp } from "../app";
 
@@ -13,77 +9,26 @@ const app = useApp();
 console.log('loaded');
 
 const defaultOptions = computed((): GraphMakerProps['defaultOptions'] => {
-    const ds = app.model.outputs.datasetSpec
-    if (!ds) {
+    const col = app.model.outputs.vUsageSpec
+    if (!col) {
         return undefined
     }
 
-    const gt = app.model.args.geneType
-
-    let value: PColumnSpec
-    let genes: AxisSpec
-    if (gt === 'isotype') {
-        genes = {
-            type: 'String',
-            name: 'pl7.app/vdj/isotype'
-        }
-        value = {
-            kind: 'PColumn',
-            valueType: 'Float',
-            name: 'pl7.app/vdj/isotypeUsage',
-            axesSpec: [
-                ds.axesSpec[0]!,
-                genes
-            ]
-        }
-
-    }
-    else {
-        genes = {
-            type: 'String',
-            name: 'pl7.app/vdj/gene',
-            domain: {
-                "pl7.app/vdj/geneType": gt,
-                "pl7.app/vdj/geneNameFormat": app.model.args.geneNameFormat
-            },
-        }
-        value = {
-            kind: 'PColumn',
-            valueType: 'Float',
-            name: 'pl7.app/vdj/geneUsage',
-            domain: {
-                "pl7.app/vdj/geneType": app.model.args.geneType,
-                "pl7.app/vdj/geneNameFormat": app.model.args.geneNameFormat
-            },
-            axesSpec: [
-                ds.axesSpec[0],
-                genes
-            ]
-        }
-    }
     const defaults: GraphMakerProps['defaultOptions'] = [
         {
             inputName: 'value',
-            selectedSource: value
+            selectedSource: col
         },
         {
             inputName: 'x',
-            selectedSource: ds.axesSpec[0]
+            selectedSource: col.axesSpec[1]
         },
         {
             inputName: 'y',
-            selectedSource: genes
+            selectedSource: col.axesSpec[2]
         }
-        // {
-        //     inputName: 'tabBy',
-        //     selectedSource: {
-        //         name: 'pl7.app/vdj/chain',
-        //         type: 'String'
-        //     }
-        // }
     ];
 
-    console.log(defaults);
 
     return defaults;
 })

@@ -7,9 +7,12 @@ import {
   InferOutputsType,
   isPColumn,
   isPColumnSpec,
+  PColumn,
   PColumnSpec,
   PlDataTableState,
-  Ref,
+  PlRef,
+  RenderCtx,
+  TreeNodeAccessor,
   ValueType
 } from '@platforma-sdk/model';
 
@@ -33,14 +36,12 @@ export type UiState = {
   graphState: GraphMakerState;
   weight: WeightFunction;
   downsampling: DownsamplingForm;
+  geneType: 'V' | 'J' | 'isotype';
+  geneNameFormat: 'gene' | 'family';
 };
 
 export type BlockArgs = {
-  clnsRef?: Ref;
-
-  // @TODO move to UI State once initial UI state will be implemented !
-  geneType: 'v' | 'j' | 'isotype';
-  geneNameFormat: 'gene' | 'family';
+  clnsRef?: PlRef;
 
   /* downsampling options */
   onlyProductive: boolean;
@@ -49,24 +50,49 @@ export type BlockArgs = {
   weight?: WeightFunction;
 };
 
-const getOutputName = (args: BlockArgs) => {
-  if (args.geneType === 'isotype') {
-    return 'isotypeUsage';
-  } else if (args.geneNameFormat === 'family') {
-    return args.geneType + 'FamilyUsage';
-  } else {
-    return args.geneType + 'Usage';
+type CTX = RenderCtx<BlockArgs, UiState>;
+
+const getColumnSpec = (ctx: CTX, name: string) => {
+  const pCols = ctx.outputs?.resolve(name)?.getPColumns();
+  if (pCols === undefined) {
+    return undefined;
   }
+  return pCols[0].spec;
+};
+
+const getTable = (ctx: CTX, name: string) => {
+  const pCols = ctx.outputs?.resolve(name)?.getPColumns();
+  if (pCols === undefined) {
+    return undefined;
+  }
+
+  const anchor = pCols[0];
+  if (!anchor) return undefined;
+
+  const r = getUniquePartitionKeys(anchor.data);
+  if (!r) return undefined;
+
+  // for the table purposes, we set "pl7.app/axisNature": "heterogeneous" on gene axis
+  if (pCols.length === 1) {
+    pCols[0].spec.axesSpec[2].annotations!['pl7.app/axisNature'] = 'heterogeneous';
+  } else {
+    throw Error('unexpected number of columns');
+  }
+
+  return {
+    table: createPlDataTable(ctx, pCols, ctx.uiState?.tableState),
+    sheets: r.map((values, i) => createPlDataTableSheet(ctx, anchor.spec.axesSpec[i], values))
+  };
 };
 
 export const model = BlockModel.create()
   .withArgs<BlockArgs>({
-    geneType: 'v',
-    geneNameFormat: 'gene',
     onlyProductive: true,
     dropOutliers: false
   })
   .withUiState<UiState>({
+    geneType: 'V',
+    geneNameFormat: 'gene',
     blockTitle: 'V/J Gene Usage',
     weight: 'auto',
     tableState: {
@@ -101,35 +127,26 @@ export const model = BlockModel.create()
     else return undefined;
   })
 
-  .output('pt', (ctx) => {
-    const pCols = ctx.outputs?.resolve(getOutputName(ctx.args))?.getPColumns();
-    if (pCols === undefined) {
-      return undefined;
-    }
+  .output('vUsage', (ctx) => getTable(ctx, 'vUsage'))
+  .output('jUsage', (ctx) => getTable(ctx, 'jUsage'))
+  .output('vFamilyUsage', (ctx) => getTable(ctx, 'vFamilyUsage'))
+  .output('jFamilyUsage', (ctx) => getTable(ctx, 'jFamilyUsage'))
+  .output('isotypeUsage', (ctx) => getTable(ctx, 'isotypeUsage'))
 
-    const anchor = pCols[0];
-    if (!anchor) return undefined;
-
-    const r = getUniquePartitionKeys(anchor.data);
-    if (!r) return undefined;
-
-    // for the table purposes, we set "pl7.app/axisNature": "heterogeneous" on gene axis
-    if (pCols.length === 1) {
-      pCols[0].spec.axesSpec[2].annotations!['pl7.app/axisNature'] = 'heterogeneous';
-    } else {
-      throw Error('unexpected number of columns');
-    }
-
-    return {
-      table: createPlDataTable(ctx, pCols, ctx.uiState?.tableState),
-      sheets: r.map((values, i) => createPlDataTableSheet(ctx, anchor.spec.axesSpec[i], values))
-    };
-  })
+  .output('vUsageSpec', (ctx) => getColumnSpec(ctx, 'vUsage'))
+  .output('jUsageSpec', (ctx) => getColumnSpec(ctx, 'jUsage'))
+  .output('vFamilyUsageSpec', (ctx) => getColumnSpec(ctx, 'vFamilyUsage'))
+  .output('jFamilyUsageSpec', (ctx) => getColumnSpec(ctx, 'jFamilyUsage'))
+  .output('isotypeUsageSpec', (ctx) => getColumnSpec(ctx, 'isotypeUsage'))
 
   .output('pf', (ctx) => {
-    const pCols = ctx.outputs?.resolve(getOutputName(ctx.args))?.getPColumns();
-    if (pCols === undefined) {
-      return undefined;
+    const pCols: PColumn<TreeNodeAccessor>[] = [];
+    for (const usage of ['vUsage', 'jUsage', 'vFamilyUsage', 'jFamilyUsage', 'isotypeUsage']) {
+      const p = ctx.outputs?.resolve(usage)?.getPColumns();
+      if (p === undefined) {
+        continue;
+      }
+      pCols.push(...p);
     }
 
     // enriching with upstream data
@@ -145,7 +162,7 @@ export const model = BlockModel.create()
 
   .output('isRunning', (ctx) => ctx.outputs?.getIsReadyOrError() === false)
 
-  .title((ctx) => ctx.uiState?.blockTitle ?? 'Repertoire Diversity')
+  .title((ctx) => ctx.uiState?.blockTitle ?? 'V/J Gene Usage')
 
   .sections([
     { type: 'link', href: '/', label: 'Tabular Results' },
