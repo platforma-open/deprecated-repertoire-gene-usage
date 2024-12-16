@@ -1,5 +1,19 @@
 # @platforma-open/milaboratories.vdj-gene-usage.ui
 
+## 1.1.0
+
+### Minor Changes
+
+- 2edfc48: Refactoring
+- 7b0ef28: major SDK update
+
+### Patch Changes
+
+- 8967e69: minor update
+- Updated dependencies [2edfc48]
+- Updated dependencies [7b0ef28]
+  - @platforma-open/milaboratories.vdj-gene-usage.model@1.1.0
+
 ## 1.0.2
 
 ### Patch Changes

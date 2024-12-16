@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.workflow
 
+## 1.1.0
+
+### Minor Changes
+
+- 2edfc48: Refactoring
+
 ## 1.0.2
 
 ### Patch Changes
