@@ -39,16 +39,16 @@ wf.body(func(args) {
 			vUsage: pframes.exportFrame(vUsage),
 			jUsage: pframes.exportFrame(jUsage),
 			vFamilyUsage: pframes.exportFrame(vFamilyUsage),
-			jFamilyUsage: pframes.exportFrame(jFamilyUsage)
-			// isotypeUsage: pframes.exportFrame(isotypeUsage) // @TODO uncomment after https://www.notion.so/mixcr/pfconv-Does-not-work-with-empty-input-csv-file-1303a83ff4af8066ab73fb04358b0725?pvs=4
+			jFamilyUsage: pframes.exportFrame(jFamilyUsage),
+			isotypeUsage: pframes.exportFrame(isotypeUsage)
 		},
 
 		exports: {
 			vUsage: vUsage,
 			jUsage: jUsage,
 			vFamilyUsage: vFamilyUsage,
-			jFamilyUsage: jFamilyUsage
-			// isotypeUsage: isotypeUsage  // @TODO uncomment after https://www.notion.so/mixcr/pfconv-Does-not-work-with-empty-input-csv-file-1303a83ff4af8066ab73fb04358b0725?pvs=4
+			jFamilyUsage: jFamilyUsage,
+			isotypeUsage: isotypeUsage
 		}
 	}
 })

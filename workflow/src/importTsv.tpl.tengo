@@ -35,7 +35,7 @@ tsvImportParams := func(usageType){
 			}
 		}
 	} else {
-		geneType := text.to_upper(usageType[0:1]) // first letter is either v or j
+		geneType := text.to_upper(usageType[0:1]) // first letter is either V or J
 		geneNameFormat := "gene"
 		if text.contains(usageType, "Family") {
 			geneNameFormat = "family"

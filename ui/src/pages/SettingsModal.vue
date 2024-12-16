@@ -141,27 +141,6 @@ watch(() => [app.model.ui.weight, hasCellTags, hasUmiTags], (_) => {
     }
 }, { deep: true, immediate: true });
 
-const geneTypes = [
-    {
-        label: "V usage",
-        value: "v"
-    },
-    {
-        label: "J usage",
-        value: "j"
-    }
-]
-
-const geneNameFormats = [
-    {
-        label: "Gene",
-        value: "gene"
-    },
-    {
-        label: "Family",
-        value: "family"
-    }
-]
 </script>
 
 <template>
@@ -169,9 +148,6 @@ const geneNameFormats = [
         <template #title>Settings</template>
         <PlDropdownRef v-model="app.model.args.clnsRef" :options="app.model.outputs.clnsOptions ?? []"
             label="Select dataset" />
-
-        <PlBtnGroup label="Gene type" v-model="app.model.args.geneType" :options="geneTypes" />
-        <PlBtnGroup label="Gene name format" v-model="app.model.args.geneNameFormat" :options="geneNameFormats" />
 
         <PlCheckbox v-model="app.model.args.onlyProductive">
             <div style="display: flex; gap: 6px">

@@ -1,18 +1,60 @@
 <script setup lang="ts">
-import { PlAgDataTable, PlAgDataTableToolsPanel, PlBlockPage, PlBtnGhost, PlDataTableSettings, PlEditableTitle, PlMaskIcon24 } from '@platforma-sdk/ui-vue';
+import { PlAgDataTable, PlAgDataTableToolsPanel, PlBlockPage, PlBtnGhost, PlDataTableSettings, PlDropdown, PlEditableTitle, PlMaskIcon24 } from '@platforma-sdk/ui-vue';
 import { computed, ref } from 'vue';
 import { useApp } from '../app';
 import SettingsModal from './SettingsModal.vue';
 
 const app = useApp();
 
+const table = computed(() => {
+  if (app.model.ui.geneType === 'V') {
+    if (app.model.ui.geneNameFormat === 'gene')
+      return app.model.outputs.vUsage;
+    else
+      return app.model.outputs.vFamilyUsage;
+  }
+  if (app.model.ui.geneType === 'J') {
+    if (app.model.ui.geneNameFormat === 'gene')
+      return app.model.outputs.jUsage;
+    else
+      return app.model.outputs.jFamilyUsage;
+  }
+  if (app.model.ui.geneType === 'isotype')
+    return app.model.outputs.isotypeUsage;
+
+  return undefined;
+})
+
 const tableSettings = computed<PlDataTableSettings>(() => ({
   sourceType: "ptable",
-  pTable: app.model.outputs.pt?.table,
-  sheets: app.model.outputs.pt?.sheets,
+  pTable: table.value?.table,
+  sheets: table.value?.sheets,
 } satisfies PlDataTableSettings));
 
-const settingsAreShown = ref(app.model.outputs.pt === undefined)
+
+const geneTypes = [
+  {
+    label: "V usage",
+    value: "V"
+  },
+  {
+    label: "J usage",
+    value: "J"
+  }
+]
+
+const geneNameFormats = [
+  {
+    label: "Gene",
+    value: "gene"
+  },
+  {
+    label: "Family",
+    value: "family"
+  }
+]
+
+const settingsAreShown = ref(app.model.args.clnsRef === undefined)
 const showSettings = () => { settingsAreShown.value = true }
 </script>
 
@@ -22,7 +64,11 @@ const showSettings = () => { settingsAreShown.value = true }
       <PlEditableTitle max-width="600px" :max-length="40" v-model="app.model.ui.blockTitle" />
     </template>
     <template #append>
+      <PlDropdown label="Gene type" v-model="app.model.ui.geneType" :options="geneTypes" />
+      <PlDropdown label="Gene name format" v-model="app.model.ui.geneNameFormat" :options="geneNameFormats" />
+
       <PlAgDataTableToolsPanel />
+
       <PlBtnGhost @click.stop="showSettings">Settings
         <template #append>
           <PlMaskIcon24 name="settings" />
