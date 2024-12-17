@@ -1,0 +1,54 @@
+{
+  "name": "@platforma-open/milaboratories.vdj-gene-usage",
+  "version": "1.1.0",
+  "scripts": {
+    "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,vue}\"",
+    "build": "rm -rf block-pack && block-tools pack",
+    "mark-stable": "block-tools mark-stable -r 's3://milab-euce1-prod-pkgs-s3-block-registry/pub/releases/?region=eu-central-1'",
+    "prepublishOnly": "block-tools pack && block-tools publish -r 's3://milab-euce1-prod-pkgs-s3-block-registry/pub/releases/?region=eu-central-1'"
+  },
+  "files": [
+    "index.d.ts",
+    "index.js"
+  ],
+  "dependencies": {
+    "@platforma-sdk/model": "catalog:",
+    "@platforma-open/milaboratories.vdj-gene-usage.workflow": "workspace:*",
+    "@platforma-open/milaboratories.vdj-gene-usage.model": "workspace:*",
+    "@platforma-open/milaboratories.vdj-gene-usage.ui": "workspace:*"
+  },
+  "block": {
+    "components": {
+      "workflow": "@platforma-open/milaboratories.vdj-gene-usage.workflow/dist/tengo/tpl/main.plj.gz",
+      "model": "@platforma-open/milaboratories.vdj-gene-usage.model/dist/model.json",
+      "ui": "@platforma-open/milaboratories.vdj-gene-usage.ui/dist"
+    },
+    "meta": {
+      "title": "V/J Gene Usage",
+      "logo": "file:../logos/block-logo.png",
+      "url": "https://github.com/platforma-open/repertoire-gene-usage",
+      "docs": "https://github.com/platforma-open/repertoire-gene-usage/docs",
+      "support": "mailto:support@milaboratories.com",
+      "description": "Calculate TCR/BCR V and J gene usage.",
+      "longDescription": "file:../docs/description.md",
+      "changelog": "file:../CHANGELOG.md",
+      "tags": [
+        "VDJ",
+        "immunology",
+        "repertoire",
+        "GeneUsage",
+        "TCR",
+        "BCR"
+      ],
+      "organization": {
+        "name": "MiLaboratories Inc",
+        "url": "https://milaboratories.com/",
+        "logo": "file:../logos/organization-logo.png"
+      }
+    }
+  },
+  "devDependencies": {
+    "@platforma-sdk/block-tools": "catalog:"
+  },
+  "packageManager": "pnpm@9.12.0"
+}

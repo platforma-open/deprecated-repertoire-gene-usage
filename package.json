@@ -3,59 +3,30 @@
   "version": "1.1.0",
   "scripts": {
     "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,vue}\"",
-    "build": "rm -rf ./block-pack && block-tools pack",
-    "prepublishOnly": "block-tools pack && block-tools publish -r 's3://milab-euce1-prod-pkgs-s3-block-registry/pub/releases/?region=eu-central-1'"
-  },
-  "files": [
-    "index.d.ts",
-    "index.js"
-  ],
-  "dependencies": {
-    "@platforma-open/milaboratories.vdj-gene-usage.workflow": "workspace:*",
-    "@platforma-open/milaboratories.vdj-gene-usage.model": "workspace:*",
-    "@platforma-open/milaboratories.vdj-gene-usage.ui": "workspace:*"
-  },
-  "block": {
-    "components": {
-      "workflow": "@platforma-open/milaboratories.vdj-gene-usage.workflow/dist/tengo/tpl/main.plj.gz",
-      "model": "@platforma-open/milaboratories.vdj-gene-usage.model/dist/model.json",
-      "ui": "@platforma-open/milaboratories.vdj-gene-usage.ui/dist"
-    },
-    "meta": {
-      "title": "V/J Gene Usage",
-      "logo": "file:logos/block-logo.png",
-      "url": "https://github.com/platforma-open/repertoire-gene-usage",
-      "docs": "https://github.com/platforma-open/repertoire-gene-usage/docs",
-      "support": "mailto:support@milaboratories.com",
-      "description": "Calculate TCR/BCR V and J gene usage.",
-      "longDescription": "file:./docs/description.md",
-      "changelog": "file:CHANGELOG.md",
-      "tags": [
-        "VDJ",
-        "immunology",
-        "repertoire",
-        "GeneUsage",
-        "TCR",
-        "BCR"
-      ],
-      "organization": {
-        "name": "MiLaboratories Inc",
-        "url": "https://milaboratories.com/",
-        "logo": "file:logos/organization-logo.png"
-      }
-    }
+    "build": "turbo run build",
+    "test": "turbo run test --concurrency 1 --env-mode=loose",
+    "mark-stable": "turbo run mark-stable",
+    "watch": "turbo watch build",
+    "changeset": "changeset",
+    "version-packages": "changeset version"
   },
   "devDependencies": {
-    "@changesets/cli": "catalog:",
-    "@platforma-sdk/block-tools": "catalog:"
+    "turbo": "catalog:",
+    "@changesets/cli": "catalog:"
   },
+  "packageManager": "pnpm@9.12.0",
   "//": {
+    "pnpm": {
     "overrides": {
       "@milaboratories/pl-model-common": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/lib/model/common/package.tgz",
       "@platforma-sdk/model": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/sdk/model/package.tgz",
       "@platforma-sdk/ui-vue": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/sdk/ui-vue/package.tgz",
       "@platforma-sdk/workflow-tengo": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/sdk/workflow-tengo/package.tgz",
       "@milaboratories/uikit": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/lib/ui/uikit/package.tgz"
+      }
     }
+  },
+  "pnpm": {
+    "overrides": {}
   }
 }
