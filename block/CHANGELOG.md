@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage
 
+## 1.2.1
+
+### Patch Changes
+
+- 954e7e8: chore: fix changelog
+
 ## 1.2.0
 
 ### Minor Changes
