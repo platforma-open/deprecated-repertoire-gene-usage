@@ -31,7 +31,7 @@
       "support": "mailto:support@milaboratories.com",
       "description": "Calculate TCR/BCR V and J gene usage.",
       "longDescription": "file:../docs/description.md",
-      "changelog": "file:../CHANGELOG.md",
+      "changelog": "file:./CHANGELOG.md",
       "tags": [
         "VDJ",
         "immunology",
