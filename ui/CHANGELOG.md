@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.ui
 
+## 1.2.0
+
+### Minor Changes
+
+- 683bbac: Hide Weight function and Downsampling in Settings window
+
 ## 1.1.0
 
 ### Minor Changes
