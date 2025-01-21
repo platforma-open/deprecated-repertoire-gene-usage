@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { PlAgDataTable, PlAgDataTableToolsPanel, PlBlockPage, PlBtnGhost, PlDataTableSettings, PlDropdown, PlEditableTitle, PlMaskIcon24 } from '@platforma-sdk/ui-vue';
+import { PlAgDataTable, PlAgDataTableToolsPanel, PlBlockPage, PlBtnGhost, 
+  PlDataTableSettings, PlDropdown, PlEditableTitle, PlMaskIcon24
+  // ,PlTabs  // Pending for PlTabs task
+} from '@platforma-sdk/ui-vue';
 import { computed, ref } from 'vue';
 import { useApp } from '../app';
 import SettingsModal from './SettingsModal.vue';
@@ -41,6 +44,12 @@ const geneTypes = [
     label: "J usage",
     value: "J"
   }
+  // Pending for PlTabs task
+  // ,
+  // {
+  //   label: "Isotype",
+  //   value: "isotype"
+  // }
 ]
 
 const geneNameFormats = [
@@ -66,7 +75,7 @@ const showSettings = () => { settingsAreShown.value = true }
     <template #append>
       <PlDropdown label="Gene type" v-model="app.model.ui.geneType" :options="geneTypes" />
       <PlDropdown label="Gene name format" v-model="app.model.ui.geneNameFormat" :options="geneNameFormats" />
-
+      <!-- <PLTabs v-model="app.model.ui.geneType" :options="geneTypes" /> -->
       <PlAgDataTableToolsPanel />
 
       <PlBtnGhost @click.stop="showSettings">Settings
