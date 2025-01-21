@@ -1,5 +1,16 @@
 # @platforma-open/milaboratories.vdj-gene-usage.ui
 
+## 1.3.0
+
+### Minor Changes
+
+- eea49c9: Lock Run button until default settings are loaded
+
+### Patch Changes
+
+- Updated dependencies [eea49c9]
+  - @platforma-open/milaboratories.vdj-gene-usage.model@1.2.0
+
 ## 1.2.0
 
 ### Minor Changes
