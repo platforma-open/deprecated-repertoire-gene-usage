@@ -1,5 +1,12 @@
 # @platforma-open/milaboratories.vdj-gene-usage
 
+## 1.2.4
+
+### Patch Changes
+
+- Updated dependencies [4988b17]
+  - @platforma-open/milaboratories.vdj-gene-usage.ui@1.3.1
+
 ## 1.2.3
 
 ### Patch Changes
