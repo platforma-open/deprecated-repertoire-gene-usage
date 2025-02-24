@@ -1,5 +1,16 @@
 # @platforma-open/milaboratories.vdj-gene-usage.ui
 
+## 1.4.0
+
+### Minor Changes
+
+- ff7f201: tracing and columns for plotting
+
+### Patch Changes
+
+- Updated dependencies [ff7f201]
+  - @platforma-open/milaboratories.vdj-gene-usage.model@1.3.0
+
 ## 1.3.2
 
 ### Patch Changes

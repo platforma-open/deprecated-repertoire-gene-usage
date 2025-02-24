@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.workflow
 
+## 1.2.0
+
+### Minor Changes
+
+- ff7f201: tracing and columns for plotting
+
 ## 1.1.0
 
 ### Minor Changes
