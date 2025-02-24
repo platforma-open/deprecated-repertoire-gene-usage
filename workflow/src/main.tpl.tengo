@@ -17,6 +17,9 @@ wf.prepare(func(args){
 })
 
 wf.body(func(args) {
+	inputSpec := args.clns.spec
+	blockId := wf.blockId().getDataAsJson()
+
 	mixcr := render.create(mixcrTpl, args)
 
 	importTsv := render.create(importTsvTpl, {
@@ -25,7 +28,8 @@ wf.body(func(args) {
 		vFamilyUsageTsv: mixcr.output("vFamilyUsageTsv"),
 		jFamilyUsageTsv: mixcr.output("jFamilyUsageTsv"),
 		isotypeUsageTsv: mixcr.output("isotypeUsageTsv"),
-		sampleIdAxisSpec: args.clns.spec.axesSpec[0]
+		inputSpec: inputSpec,
+		blockId: blockId
 	})
 
 	vUsage := importTsv.output("vUsage")
