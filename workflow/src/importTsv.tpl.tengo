@@ -5,13 +5,14 @@ exec := import("@platforma-sdk/workflow-tengo:exec")
 assets := import("@platforma-sdk/workflow-tengo:assets")
 pframes := import("@platforma-sdk/workflow-tengo:pframes")
 pColumn := import("@platforma-sdk/workflow-tengo:pframes.pcolumn")
+pSpec := import("@platforma-sdk/workflow-tengo:pframes.spec")
 xsv := import("@platforma-sdk/workflow-tengo:pframes.xsv")
 text := import("text")
 json := import("json")
 
 self.defineOutputs("vUsage", "jUsage", "vFamilyUsage", "jFamilyUsage", "isotypeUsage")
 
-tsvImportParams := func(usageType){
+tsvImportParams := func(usageType, tracing){
 
 	// gene/isotype axis spec
 	axisSpec:= undefined
@@ -31,6 +32,7 @@ tsvImportParams := func(usageType){
 			name: "pl7.app/vdj/isotypeUsage",
 			valueType: "Float",
 			annotations: {
+				"pl7.app/trace": tracing,
 				"pl7.app/label": "Isotype usage"
 			}
 		}
@@ -61,6 +63,7 @@ tsvImportParams := func(usageType){
 				"pl7.app/vdj/geneNameFormat": geneNameFormat
 			},
 			annotations: {
+				"pl7.app/trace": tracing,
 				"pl7.app/label": geneType + " " + geneNameFormat + " usage"
 			}
 		}
@@ -106,7 +109,7 @@ FILE_NAME_PREFIX_LEN := {
 FILE_NAME_SUFFIX_LEN := len(".tsv")
 
 
-importUsage := func(tsv, usageType, sampleIdAxisSpec) {
+importUsage := func(tsv, usageType, sampleIdAxisSpec, tracing) {
 
 	tsvMap := pColumn.resourceMapBuilder(/* key length*/ 1 )
 	for fileName, file in tsv {
@@ -115,7 +118,7 @@ importUsage := func(tsv, usageType, sampleIdAxisSpec) {
 	}
 	tsvMap = tsvMap.build()
 
-	spec := tsvImportParams(usageType)
+	spec := tsvImportParams(usageType, tracing)
 	spec.axes[0].spec = sampleIdAxisSpec
 
 	pf := xsv.importFileMap(tsvMap, "tsv", spec, {
@@ -141,11 +144,19 @@ importUsage := func(tsv, usageType, sampleIdAxisSpec) {
 }
 
 self.body(func(args) {
+	inputSpec := args.inputSpec
+	blockId := args.blockId
+
+	trace := pSpec.makeTrace(inputSpec,
+		//{type: "milaboratories.repertoire-gene-usage.filtering", id: blockId + ".filtering", importance: 30, label: filteringStr},
+		{type: "milaboratories.repertoire-gene-usage", id: blockId, importance: 25, label: "Repertoire Gene Usage"}
+	)
+
 	return {
-		vUsage: importUsage(args.vUsageTsv, "vUsage", args.sampleIdAxisSpec),
-		jUsage: importUsage(args.jUsageTsv, "jUsage", args.sampleIdAxisSpec),
-		vFamilyUsage: importUsage(args.vFamilyUsageTsv, "vFamilyUsage", args.sampleIdAxisSpec),
-		jFamilyUsage: importUsage(args.jFamilyUsageTsv, "jFamilyUsage", args.sampleIdAxisSpec),
-		isotypeUsage: importUsage(args.isotypeUsageTsv, "isotypeUsage", args.sampleIdAxisSpec)
+		vUsage: importUsage(args.vUsageTsv, "vUsage", inputSpec.axesSpec[0], trace.valueStr),
+		jUsage: importUsage(args.jUsageTsv, "jUsage", inputSpec.axesSpec[0], trace.valueStr),
+		vFamilyUsage: importUsage(args.vFamilyUsageTsv, "vFamilyUsage", inputSpec.axesSpec[0], trace.valueStr),
+		jFamilyUsage: importUsage(args.jFamilyUsageTsv, "jFamilyUsage", inputSpec.axesSpec[0], trace.valueStr),
+		isotypeUsage: importUsage(args.isotypeUsageTsv, "isotypeUsage", inputSpec.axesSpec[0], trace.valueStr)
 	}
 })

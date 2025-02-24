@@ -3,6 +3,7 @@ import {
   BlockModel,
   createPlDataTable,
   createPlDataTableSheet,
+  createPFrameForGraphs,
   getUniquePartitionKeys,
   InferOutputsType,
   isPColumn,
@@ -42,6 +43,7 @@ export type UiState = {
 
 export type BlockArgs = {
   clnsRef?: PlRef;
+  title?: string;
 
   /* downsampling options */
   onlyProductive: boolean;
@@ -157,19 +159,30 @@ export const model = BlockModel.create()
     }
 
     // enriching with upstream data
-    const valueTypes = ['Int', 'Long', 'Float', 'Double', 'String', 'Bytes'] as ValueType[];
-    const upstream = ctx.resultPool
+    const valueTypes = [
+      "Int",
+      "Long",
+      "Float",
+      "Double",
+      "String",
+      "Bytes",
+    ] as ValueType[];
+    const upstream = ctx.resultPool 
       .getData()
       .entries.map((v) => v.obj)
       .filter(isPColumn)
-      .filter((column) => valueTypes.find((valueType) => valueType === column.spec.valueType));
+      .filter((column) => 
+        valueTypes.find((valueType) => (valueType === column.spec.valueType) && (
+                                          column.id.includes("metadata"))
+                                        )
+      );
 
-    return ctx.createPFrame([...pCols, ...upstream]);
+    return createPFrameForGraphs(ctx, [...pCols, ...upstream]);
   })
 
   .output('isRunning', (ctx) => ctx.outputs?.getIsReadyOrError() === false)
 
-  .title((ctx) => ctx.uiState?.blockTitle ?? 'V/J Gene Usage')
+  .title((ctx) => (ctx.args.title ? `V/J Gene Usage - ${ctx.args.title}` : 'V/J Gene Usage'))
 
   .sections([
     { type: 'link', href: '/', label: 'Tabular Results' },
