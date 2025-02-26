@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.ui
 
+## 1.4.1
+
+### Patch Changes
+
+- 06ae18d: update graph-maker version
+
 ## 1.4.0
 
 ### Minor Changes
