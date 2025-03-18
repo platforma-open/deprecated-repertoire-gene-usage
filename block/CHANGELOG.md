@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage
 
+## 1.2.8
+
+### Patch Changes
+
+- d170a2f: Updated tags and ranking
+
 ## 1.2.7
 
 ### Patch Changes
