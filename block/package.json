@@ -33,18 +33,16 @@
       "longDescription": "file:../docs/description.md",
       "changelog": "file:./CHANGELOG.md",
       "tags": [
-        "VDJ",
-        "immunology",
-        "repertoire",
-        "GeneUsage",
-        "TCR",
-        "BCR"
+        "airr",
+        "downstream",
+        "repertoire"
       ],
       "organization": {
         "name": "MiLaboratories Inc",
         "url": "https://milaboratories.com/",
         "logo": "file:../logos/organization-logo.png"
-      }
+      },
+      "marketplaceRanking": 16300
     }
   },
   "devDependencies": {
