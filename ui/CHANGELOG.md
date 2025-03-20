@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.ui
 
+## 1.4.2
+
+### Patch Changes
+
+- 9d149d5: typescript version to 5.5.4
+
 ## 1.4.1
 
 ### Patch Changes
