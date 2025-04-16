@@ -24,7 +24,7 @@
       "ui": "@platforma-open/milaboratories.vdj-gene-usage.ui/dist"
     },
     "meta": {
-      "title": "V/J Gene Usage",
+      "title": "V/J Gene Usage (Deprecated)",
       "logo": "file:../logos/block-logo.png",
       "url": "https://github.com/platforma-open/repertoire-gene-usage",
       "docs": "https://github.com/platforma-open/repertoire-gene-usage/docs",
@@ -42,7 +42,7 @@
         "url": "https://milaboratories.com/",
         "logo": "file:../logos/organization-logo.png"
       },
-      "marketplaceRanking": 16300
+      "marketplaceRanking": 1000
     }
   },
   "devDependencies": {
