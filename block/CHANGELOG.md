@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage
 
+## 1.3.1
+
+### Patch Changes
+
+- 9675602: Block deprecated
+
 ## 1.3.0
 
 ### Minor Changes
