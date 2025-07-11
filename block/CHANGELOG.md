@@ -1,5 +1,15 @@
 # @platforma-open/milaboratories.vdj-gene-usage
 
+## 1.3.3
+
+### Patch Changes
+
+- 378e151: Mark this block as deprecated
+- Updated dependencies [378e151]
+  - @platforma-open/milaboratories.vdj-gene-usage.model@1.3.1
+  - @platforma-open/milaboratories.vdj-gene-usage.ui@1.4.3
+  - @platforma-open/milaboratories.vdj-gene-usage.workflow@1.2.1
+
 ## 1.3.2
 
 ### Patch Changes
