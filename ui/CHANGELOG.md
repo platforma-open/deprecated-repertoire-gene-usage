@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.vdj-gene-usage.ui
 
+## 1.4.4
+
+### Patch Changes
+
+- 8de5a2b: Deprecated block removed from Add Block
+- Updated dependencies [8de5a2b]
+  - @platforma-open/milaboratories.vdj-gene-usage.model@1.3.2
+
 ## 1.4.3
 
 ### Patch Changes

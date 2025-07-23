@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.workflow
 
+## 1.2.2
+
+### Patch Changes
+
+- 8de5a2b: Deprecated block removed from Add Block
+
 ## 1.2.1
 
 ### Patch Changes
