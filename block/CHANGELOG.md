@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage
 
+## 1.3.5
+
+### Patch Changes
+
+- 2f23ae6: Make deprecated
+
 ## 1.3.4
 
 ### Patch Changes
