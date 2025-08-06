@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.model
 
+## 1.3.3
+
+### Patch Changes
+
+- db5bada: Remove from add block view.
+
 ## 1.3.2
 
 ### Patch Changes

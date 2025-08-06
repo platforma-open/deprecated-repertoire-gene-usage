@@ -1,5 +1,15 @@
 # @platforma-open/milaboratories.vdj-gene-usage
 
+## 1.3.6
+
+### Patch Changes
+
+- db5bada: Remove from add block view.
+- Updated dependencies [db5bada]
+  - @platforma-open/milaboratories.vdj-gene-usage.model@1.3.3
+  - @platforma-open/milaboratories.vdj-gene-usage.ui@1.4.5
+  - @platforma-open/milaboratories.vdj-gene-usage.workflow@1.2.3
+
 ## 1.3.5
 
 ### Patch Changes
