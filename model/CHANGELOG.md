@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.vdj-gene-usage.model
 
+## 1.3.4
+
+### Patch Changes
+
+- b448036: Removed from Add Block
+
 ## 1.3.3
 
 ### Patch Changes
